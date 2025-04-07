@@ -20,7 +20,9 @@
     text-decoration: none;
     transition: color 0.3s ease;
   }
-  
+  .navbar-brand {
+    color: #2563eb;
+  }
   /* Menu Links */
   .custom-menu {
     display: flex;

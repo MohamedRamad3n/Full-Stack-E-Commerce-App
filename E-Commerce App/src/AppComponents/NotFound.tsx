@@ -1,17 +1,17 @@
-import { Box, Button, Heading, Text, Center, Stack, useBreakpointValue, VStack, Icon } from '@chakra-ui/react';
+import { Box, Text, Heading, Center, Stack, useBreakpointValue, VStack, Icon, Button } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
-import { IoRocketSharp } from 'react-icons/io5'; // Rocket icon for a nice touch
+import { IoMdSad } from 'react-icons/io'; // A "sad" icon to enhance the design
 import { useColorModeValue } from '../components/ui/color-mode';
 
-const Home = () => {
-  const buttonSize = useBreakpointValue({ base: 'sm', md: 'lg' });
+const NotFound = () => {
+  const buttonSize = useBreakpointValue<"2xs" | "xs" | "sm" | "md" | "lg" | "xl" | "2xl">({ base: 'sm', md: 'md' }) || 'md';
 
-  // Dynamic color values based on light/dark mode
-  const headingColor = useColorModeValue("teal.600", "teal.300");
+  // Using useColorModeValue for dynamic colors based on light/dark mode
+  const bgColor = useColorModeValue("gray.50", "gray.900");
+  const boxBgColor = useColorModeValue("white", "gray.800");
   const textColor = useColorModeValue("gray.700", "gray.300");
-  const buttonColorScheme = useColorModeValue("teal", "gray");
-  const bgColor = useColorModeValue("gray.50", "gray.800");
-  const boxBgColor = useColorModeValue("white", "gray.700");
+  const headingColor = useColorModeValue("teal.600", "teal.300");
+  const sadIconColor = useColorModeValue("teal.500", "teal.400");
 
   return (
     <Center h="100vh" flexDirection="column" bg={bgColor} color={textColor}>
@@ -25,33 +25,33 @@ const Home = () => {
         boxShadow="xl"
       >
         <VStack spacing={4} align="center">
-          <Icon as={IoRocketSharp} w={16} h={16} color={headingColor} />
+          <Icon as={IoMdSad} w={16} h={16} color={sadIconColor} />
           <Heading size="2xl" color={headingColor} fontWeight="bold">
-            Welcome to Our Application!
+            404 - Page Not Found
           </Heading>
           <Text fontSize="lg" color={textColor} maxW="400px" mx="auto">
-            Experience the future of productivity with our app. Manage your tasks, projects, and more, all in one place.
+            Sorry, the page you are looking for might have been moved or doesn't exist.
           </Text>
           <Stack mt={6} spacing={4} direction={{ base: 'column', md: 'row' }} justify="center">
             <Button
               as={RouterLink}
-              to="/products"
+              to="/"
               size={buttonSize}
-              colorScheme={buttonColorScheme}
+              colorScheme="teal"
               variant="solid"
               width={{ base: 'full', sm: 'auto' }}
             >
-              Get Started
+              Go to Home
             </Button>
             <Button
               as={RouterLink}
-              to="/about"
+              to="/contact"
               size={buttonSize}
               colorScheme="gray"
               variant="outline"
               width={{ base: 'full', sm: 'auto' }}
             >
-              Learn More
+              Contact Support
             </Button>
           </Stack>
         </VStack>
@@ -60,4 +60,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default NotFound;

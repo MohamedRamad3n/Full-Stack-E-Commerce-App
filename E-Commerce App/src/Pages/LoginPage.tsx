@@ -21,18 +21,23 @@ import { IoMdEyeOff } from "react-icons/io";
 import { userLogin } from "../app/features/LoginSlice";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../app/store";
+import { Navigate } from "react-router-dom";
 
-export default function LoginPage() {
+export default function LoginPage({
+  isAuthenticated,
+}: {
+  isAuthenticated: boolean;
+}) {
   const [user, setUser] = useState({ identifier: "", password: "" });
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const dispatch: AppDispatch = useDispatch();
-  const { data, loading, error } = useSelector(
-    (state: RootState) => state.userLogin
-  );
-  console.log(data);
+  const bgColor = useColorModeValue("gray.50", "gray.800");
+  const { data, loading } = useSelector((state: RootState) => state.userLogin);
 
+  if (isAuthenticated) return <Navigate to="/" replace />;
+  
   const validateEmail = (email: string) => {
     const regex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
     return regex.test(email);
@@ -58,32 +63,33 @@ export default function LoginPage() {
 
     setIsEmailValid(emailIsValid);
     setIsPasswordValid(passwordIsValid);
-    dispatch(userLogin(user));
     if (emailIsValid && passwordIsValid) {
+      dispatch(userLogin(user));
       console.log("✅ Form submitted:", user);
     } else {
       console.log("❌ Invalid form");
     }
   };
 
+
   return (
+    
     <Flex
       minH="100vh"
       align="center"
       justify="center"
-      bg={useColorModeValue("gray.50", "gray.800")}
+      bg={bgColor}
     >
       <Stack spacing={8} mx="auto" maxW="lg" py={12} px={6}>
         <Stack align="center">
-          <Heading fontSize="4xl">Sign in to your account</Heading>
-          <Text fontSize="lg" color="gray.600">
-            to enjoy all of our cool <Text color="blue.400">features</Text> ✌️
-          </Text>
+          <Heading mb={"30px"} fontSize="4xl">
+            Sign in to your account
+          </Heading>
         </Stack>
         <Box
           as="form"
           rounded="lg"
-          bg={useColorModeValue("white", "gray.700")}
+          bg={bgColor}
           boxShadow="lg"
           p={8}
           onSubmit={onSubmitHandler}

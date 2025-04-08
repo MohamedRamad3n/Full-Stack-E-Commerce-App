@@ -8,6 +8,7 @@ import {
   Stack,
   Center,
   Link,
+  Text,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import {
@@ -21,6 +22,7 @@ import { Avatar } from "@chakra-ui/avatar";
 import { useColorMode, useColorModeValue } from "../components/ui/color-mode";
 import { IoSunnySharp } from "react-icons/io5";
 import { FaMoon } from "react-icons/fa";
+import CookieServices from "../services/CookieServices";
 interface Props {
   children: React.ReactNode;
   to: string;
@@ -57,6 +59,12 @@ const NavLink = (props: Props) => {
 export default function NavBar() {
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const token = CookieServices.getCookie("jwt");
+
+  const logoutHandler = () => {
+    CookieServices.removeCookie("jwt");
+    window.location.reload();
+  };
   return (
     <>
       <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
@@ -83,43 +91,57 @@ export default function NavBar() {
               <Button onClick={toggleColorMode} variant={"ghost"}>
                 {colorMode === "light" ? <FaMoon /> : <IoSunnySharp />}
               </Button>
-              <NavLink  to={"/login"}>
-                  Login
-                </NavLink>
-              <Menu>
-                <MenuButton
-                  as={Button}
-                  rounded={"full"}
-                  variant={"ghost"}
-                  cursor={"pointer"}
-                  minW={0}
-                >
-                  <Avatar
-                    width={"40px"}
-                    height={"40px"}
-                    borderRadius={"50%"}
-                    src={"https://avatars.dicebear.com/api/male/username.svg"}
-                  />
-                </MenuButton>
-                <MenuList alignItems={"center"}>
-                  <br />
-                  <Center>
+              {!token && (
+              <NavLink to={"/login"}>Login</NavLink>
+              )}
+              {token && (
+                <Menu>
+                  <MenuButton
+                    as={Button}
+                    rounded={"full"}
+                    variant={"ghost"}
+                    cursor={"pointer"}
+                    minW={0}
+                  >
                     <Avatar
-                      size={"2xl"}
-                      src={"https://avatars.dicebear.com/api/male/username.svg"}
+                      boxSize="40px"
+                      src="https://avatars.dicebear.com/api/male/username.svg"
                     />
-                  </Center>
-                  <br />
-                  <Center>
-                    <p>Username</p>
-                  </Center>
-                  <br />
-                  <MenuDivider />
-                  <MenuItem>Your Servers</MenuItem>
-                  <MenuItem>Account Settings</MenuItem>
-                  <MenuItem>Logout</MenuItem>
-                </MenuList>
-              </Menu>
+                  </MenuButton>
+                  <MenuList
+                    p={4}
+                    borderRadius="lg"
+                    boxShadow="lg"
+                    border="1px solid"
+                    borderColor="gray.200"
+                    minW="250px"
+                  >
+                    <Center>
+                      <Avatar
+                        size="xl"
+                        src="https://avatars.dicebear.com/api/male/username.svg"
+                      />
+                    </Center>
+                    <Center mt={2}>
+                      <p>Username</p>
+                    </Center>
+                    <MenuDivider />
+                    <MenuItem _hover={{ bg: "gray.100" }}>
+                      Your Servers
+                    </MenuItem>
+                    <MenuItem _hover={{ bg: "gray.100" }}>
+                      Account Settings
+                    </MenuItem>
+                    <MenuItem
+                    cursor={"pointer"}
+                      onClick={logoutHandler}
+                      _hover={{ bg: "red.50", color: "red.500" }}
+                    >
+                      Logout
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
+              )}
             </Stack>
           </Flex>
         </Flex>

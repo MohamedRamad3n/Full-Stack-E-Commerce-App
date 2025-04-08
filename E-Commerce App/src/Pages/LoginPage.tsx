@@ -11,19 +11,27 @@ import {
 import {
   FormControl,
   FormLabel,
-  FormErrorMessage, 
+  FormErrorMessage,
 } from "@chakra-ui/form-control"; // Updated import
 
 import { useColorModeValue } from "../components/ui/color-mode";
 import { useState } from "react";
 import { GrView } from "react-icons/gr";
 import { IoMdEyeOff } from "react-icons/io";
+import { userLogin } from "../app/features/LoginSlice";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../app/store";
 
 export default function LoginPage() {
-  const [user, setUser] = useState({ email: "", password: "" });
+  const [user, setUser] = useState({ identifier: "", password: "" });
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const dispatch: AppDispatch = useDispatch();
+  const { data, loading, error } = useSelector(
+    (state: RootState) => state.userLogin
+  );
+  console.log(data);
 
   const validateEmail = (email: string) => {
     const regex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
@@ -38,19 +46,19 @@ export default function LoginPage() {
     const { name, value } = e.target;
     setUser((prev) => ({ ...prev, [name]: value }));
 
-    if (name === "email") setIsEmailValid(validateEmail(value));
+    if (name === "identifier") setIsEmailValid(validateEmail(value));
     if (name === "password") setIsPasswordValid(validatePassword(value));
   };
 
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const emailIsValid = validateEmail(user.email);
+    const emailIsValid = validateEmail(user.identifier);
     const passwordIsValid = validatePassword(user.password);
 
     setIsEmailValid(emailIsValid);
     setIsPasswordValid(passwordIsValid);
-
+    dispatch(userLogin(user));
     if (emailIsValid && passwordIsValid) {
       console.log("✅ Form submitted:", user);
     } else {
@@ -85,8 +93,8 @@ export default function LoginPage() {
               <FormLabel>Email address</FormLabel>
               <Input
                 type="email"
-                name="email"
-                value={user.email}
+                name="identifier"
+                value={user.identifier}
                 onChange={onChangeHandler}
                 borderColor={!isEmailValid ? "red.500" : "gray.200"}
                 _focus={{
@@ -135,7 +143,7 @@ export default function LoginPage() {
                   {showPassword ? <GrView /> : <IoMdEyeOff />}
                 </Button>
               </Box>
-              { !isPasswordValid && (
+              {!isPasswordValid && (
                 <FormErrorMessage
                   color="red.500"
                   fontSize="sm"
@@ -165,6 +173,7 @@ export default function LoginPage() {
                 bg="blue.400"
                 color="white"
                 _hover={{ bg: "blue.500" }}
+                loading={loading}
               >
                 Sign in
               </Button>

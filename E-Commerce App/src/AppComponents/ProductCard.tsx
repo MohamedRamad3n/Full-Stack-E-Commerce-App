@@ -1,14 +1,13 @@
 import { Button, Card, Image, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { useColorMode } from "@chakra-ui/color-mode";
-import { IProduct } from "../Pages/Products";
+import { ICartItem } from "../utils";
 
-const ProductCard = ({ attributes }: { attributes: IProduct
- }) => {
-  console.log(import.meta.env);
-  
+const ProductCard = ({ attributes }: { attributes: ICartItem }) => {
+  console.log(attributes);
+
   const { colorMode } = useColorMode();
-  return (
+  return ( 
     <Card.Root
       bg={"none"}
       p={"10px"}
@@ -43,7 +42,10 @@ const ProductCard = ({ attributes }: { attributes: IProduct
         </Text>
       </Card.Body>
       <Card.Footer justifyContent="center" padding="10px 0">
-        <Link style={{ width: "100%" }} to={`/product/${attributes.documentId}`}>
+        <Link
+          style={{ width: "100%" }}
+          to={`/product/${attributes.documentId}`}
+        >
           <Button
             bg={colorMode !== "light" ? "#e6f3fd" : "#9f7aea"}
             color={colorMode !== "light" ? "#9f7aea" : "white"}

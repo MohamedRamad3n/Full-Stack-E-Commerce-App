@@ -9,6 +9,7 @@ import {
   Center,
   Link,
   Text,
+  Icon,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import {
@@ -23,6 +24,9 @@ import { useColorMode, useColorModeValue } from "../components/ui/color-mode";
 import { IoSunnySharp } from "react-icons/io5";
 import { FaMoon } from "react-icons/fa";
 import CookieServices from "../services/CookieServices";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../app/store";
+import { openCartDrawer } from "../app/features/globalSlice";
 interface Props {
   children: React.ReactNode;
   to: string;
@@ -57,10 +61,16 @@ const NavLink = (props: Props) => {
 };
 
 export default function NavBar() {
+  const { cartProducts } = useSelector((state: RootState) => state.cart);
+  const dispatch = useDispatch();
   const { colorMode, toggleColorMode } = useColorMode();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const token = CookieServices.getCookie("jwt");
+  const handleOpen = () => {
+    console.log("open cart drawer");
 
+    dispatch(openCartDrawer());
+  };
+  const token = CookieServices.getCookie("jwt");
   const logoutHandler = () => {
     CookieServices.removeCookie("jwt");
     window.location.reload();
@@ -91,9 +101,23 @@ export default function NavBar() {
               <Button onClick={toggleColorMode} variant={"ghost"}>
                 {colorMode === "light" ? <FaMoon /> : <IoSunnySharp />}
               </Button>
-              {!token && (
-              <NavLink to={"/login"}>Login</NavLink>
-              )}
+              <Button
+                colorScheme="teal"
+                variant="solid"
+                size="sm"
+                px={2}
+                py={2}
+                fontWeight="bold"
+                borderRadius="xl"
+                boxShadow="md"
+                _hover={{ bg: "teal.600" }}
+                _active={{ bg: "teal.700" }}
+                onClick={handleOpen}
+              >
+                🛒 Cart ({cartProducts.length})
+              </Button>
+
+              {!token && <NavLink to={"/login"}>Login</NavLink>}
               {token && (
                 <Menu>
                   <MenuButton
@@ -133,7 +157,7 @@ export default function NavBar() {
                       Account Settings
                     </MenuItem>
                     <MenuItem
-                    cursor={"pointer"}
+                      cursor={"pointer"}
                       onClick={logoutHandler}
                       _hover={{ bg: "red.50", color: "red.500" }}
                     >

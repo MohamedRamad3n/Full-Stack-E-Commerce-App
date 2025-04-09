@@ -34,7 +34,6 @@ const ProductsPage = () => {
     queryKey: ["products"],
     queryFn: fetchProducts,
   });
-
   if (isLoading) {
     return (
       <Grid
@@ -42,7 +41,7 @@ const ProductsPage = () => {
         templateColumns={"repeat(auto-fill, minmax(300px, 1fr))"}
         gap={6}
       >
-        {Array.from({ length:  8 }).map((_, index) => (
+        {Array.from({ length: 8 }).map((_, index) => (
           <Skelton key={index} />
         ))}
       </Grid>
@@ -64,7 +63,14 @@ const ProductsPage = () => {
       gap={6}
     >
       {data?.map((product) => (
-        <ProductCard key={product.id} attributes={product} />
+        <ProductCard
+          key={product.id}
+          attributes={{
+            ...product,
+            quantity: 0,
+            shoppingCartItems: [],
+          }}
+        />
       ))}
     </Grid>
   );

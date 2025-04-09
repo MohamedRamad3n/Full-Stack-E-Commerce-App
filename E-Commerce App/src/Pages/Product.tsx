@@ -8,13 +8,17 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import { useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
+import { addToCart } from "../app/features/cartSlice";
 
 const Product = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  console.log(id);
+const dispatch = useDispatch();
 
+
+ 
   const fetchProduct = async () => {
     const response = await fetch(
       `${import.meta.env.VITE_SERVER_URL}/api/products/${id}?populate=*`
@@ -31,7 +35,10 @@ const Product = () => {
     queryFn: fetchProduct,
     enabled: !!id,
   });
-  console.log(data);
+  
+  const addToCartHandler = ()=>{
+    dispatch(addToCart(data));
+  }
 
   if (isLoading) {
     return (
@@ -98,6 +105,7 @@ const Product = () => {
           size="xl"
           mt={4}
           _hover={{ bg: "teal.600", transform: "scale(1.05)" }}
+          onClick={addToCartHandler}
         >
           Add to Cart
         </Button>

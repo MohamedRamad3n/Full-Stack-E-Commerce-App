@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import NavBar from "./NavBar";
+import CartDrawer from "../AppComponents/cartDrwaer";
 const AppLayout = () => {
   return (
     <>
@@ -8,6 +9,7 @@ const AppLayout = () => {
         {/* This is where the child components will be rendered */}
         <Outlet />
       </div>
+      <CartDrawer />
     </>
   );
 };

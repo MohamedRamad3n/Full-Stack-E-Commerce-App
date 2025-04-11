@@ -9,7 +9,6 @@ type CartItemProps = {
   price: number;
   quantity: number;
   thumbnail?: string;
-  documentId?: string;
 };
 
 const CartDrawerItem: React.FC<CartItemProps> = ({
@@ -18,7 +17,6 @@ const CartDrawerItem: React.FC<CartItemProps> = ({
   price,
   quantity,
   thumbnail,
-  documentId,
 }) => {
   const dispatch = useDispatch();
   return (

@@ -11,10 +11,19 @@ export interface IProduct {
   description: string;
   price: number;
   image: string;
+  stock: number;
+  category: ICategory;
   createdAt: string;
   thumbnail: {
     url: string;
   };
+}
+interface ICategory {
+  id: number;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
 
 const ProductsPage = () => {

@@ -7,9 +7,13 @@ import NotFound from "../AppComponents/NotFound";
 import LoginPage from "../Pages/LoginPage";
 import AppLayout from "../layout/AppLayout";
 import CookieServices from "../services/CookieServices";
+import SidebarWithHeader from "../layout/dashboard/DashBoardLayout";
+import DashBoard from "../layout/dashboard";
+import DashBoardProductsTable from "../AppComponents/DashBoardProductsTable";
+import DashBoardProductsTableSkeleton from "../AppComponents/TableSkelton";
 const AppRouter = () => {
-  const token = CookieServices.getCookie("jwt") ;
-  
+  const token = CookieServices.getCookie("jwt");
+
   return (
     <Router>
       <Routes>
@@ -20,7 +24,12 @@ const AppRouter = () => {
           <Route path="/product/:id" element={<Product />} />
           <Route path="*" element={<NotFound />} />
         </Route>
-        <Route path="/login" element={<LoginPage isAuthenticated = {token} />} />
+        <Route path="/dashboard" element={<SidebarWithHeader />}>
+          <Route index element={<DashBoardProductsTable />} />
+          <Route path="/dashboard/products" element={<ProductsPage />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+        <Route path="/login" element={<LoginPage isAuthenticated={token} />} />
       </Routes>
     </Router>
   );

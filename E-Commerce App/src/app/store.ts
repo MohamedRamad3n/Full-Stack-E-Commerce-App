@@ -4,6 +4,7 @@ import cartReducer from "./features/cartSlice";
 import globalReducer from "./features/globalSlice";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import { apiSlice } from "./features/apiSlice";
 
 const persistCartConfig = {
   key: "cart",
@@ -15,7 +16,12 @@ export const store = configureStore({
     userLogin: userLoginReducer,
     cart: persistedCart,
     global: globalReducer,
+    [apiSlice.reducerPath]: apiSlice.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }).concat(apiSlice.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

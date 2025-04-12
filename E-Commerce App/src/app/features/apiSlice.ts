@@ -11,6 +11,7 @@ export const apiSlice = createApi({
     baseUrl: import.meta.env.VITE_SERVER_URL,
   }),
   endpoints: (builder) => ({
+    //Get All Products
     getProducts: builder.query({
       query: (args) => {
         const { page } = args;
@@ -26,6 +27,7 @@ export const apiSlice = createApi({
         return [...tags, { type: "Products", id: "LIST" }];
       },
     }),
+    //Delete Product
     deleteProduct: builder.mutation({
       query: (documentId) => ({
         url: `/api/products/${documentId}`,
@@ -35,11 +37,75 @@ export const apiSlice = createApi({
           Authorization: `Bearer ${CookieServices.getCookie("jwt")}`,
         },
       }),
-      invalidatesTags: (result, error, documentId) => {
+      invalidatesTags: (documentId) => {
         return [{ type: "Products", documentId }];
+      },
+    }),
+    updateProduct: builder.mutation({
+      query: ({ documentId, body }) => {
+        // If body is FormData, log its contents
+        if (body instanceof FormData) {
+          body.forEach((value, key) => {
+            console.log(`${key}: ${value}`);
+          });
+        } else {
+          console.log("Update Product Body:", body); // For non-FormData bodies
+        }
+    
+        return {
+          url: `/api/products/${documentId}`,
+          method: "PUT",
+          body,
+          headers: {
+            Authorization: `Bearer ${CookieServices.getCookie("jwt")}`,
+          },
+        };
+      },
+      async onQueryStarted({ documentId, body }, { dispatch, queryFulfilled }) {
+        console.log("Starting update for product ID:", documentId);
+    
+        if (body instanceof FormData) {
+          body.forEach((value, key) => {
+            console.log(`${key}: ${value}`); // Log FormData contents
+          });
+        } else {
+          console.log("Product update body:", body); // Log regular body
+        }
+    
+        const patchResult = dispatch(
+          apiSlice.util.updateQueryData("getProducts", documentId, (draft) => {
+            Object.assign(draft, body);
+          })
+        );
+    
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+    }),
+    
+    
+    createProduct: builder.mutation({
+      query: (body) => {
+        console.log("Creating Product with Body:", body); // Logging the body
+        return {
+          url: "/api/products",
+          method: "POST",
+          body,
+          headers: {
+            Authorization: `Bearer ${CookieServices.getCookie("jwt")}`,
+          },
+        };
       },
     }),
   }),
 });
 
-export const { useGetProductsQuery, useDeleteProductMutation } = apiSlice;
+export const {
+  useGetProductsQuery,
+  useDeleteProductMutation,
+  useUpdateProductMutation,
+  useCreateProductMutation,
+} = apiSlice;

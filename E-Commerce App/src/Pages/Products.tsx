@@ -12,7 +12,7 @@ export interface IProduct {
   price: number;
   image: string;
   stock: number;
-  category: ICategory;
+  category?: ICategory | null;
   createdAt: string;
   thumbnail: {
     url: string;

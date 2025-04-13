@@ -45,11 +45,26 @@ const DashBoardProductsTable = () => {
     createdAt: "",
     documentId: "",
   };
-
-  const [productToEdit, setProductToEdit] =
-    useState<IProduct>(initialProductState);
-  const [productToCreate, setProductToCreate] =
-    useState<IProduct>(initialProductState);
+  const [productToEdit, setProductToEdit] = useState<IProduct>({
+    ...initialProductState,
+    thumbnail: {
+      formats: {
+        thumbnail: {
+          url: ""
+        }
+      }
+    }
+  });
+  const [productToCreate, setProductToCreate] = useState<IProduct>({
+    ...initialProductState,
+    thumbnail: {
+      formats: {
+        thumbnail: {
+          url: ""
+        }
+      }
+    }
+  });
 
   const [deleteDashBoardProduct, { isLoading: isDestroying, isSuccess }] =
     useDeleteProductMutation();
@@ -179,8 +194,8 @@ const DashBoardProductsTable = () => {
 
     if (thumbnailFile) {
       formData.append("files.thumbnail", thumbnailFile);
-    } else if (productToEdit.thumbnail?.url) {
-      formData.append("thumbnail", productToEdit.thumbnail.url);
+    } else if (productToEdit.thumbnail?.formats?.thumbnail?.url) {
+      formData.append("thumbnail", productToEdit.thumbnail.formats?.thumbnail?.url);
     }
 
     logFormData(formData);
@@ -247,7 +262,23 @@ const DashBoardProductsTable = () => {
       });
     }
     if (IsCreatedSuccess) {
-      setProductToCreate(initialProductState);
+      setProductToCreate({
+        id: 0,
+        title: "",
+        description: "", 
+        price: 0,
+        stock: 0,
+        thumbnail: {
+          formats: {
+            thumbnail: {
+              url: ""
+            }
+          }
+        },
+        image: "",
+        createdAt: "",
+        documentId: ""
+      });
       setThumbnailFile(null);
       closeModalToCreate();
       toaster.create({
@@ -303,8 +334,7 @@ const DashBoardProductsTable = () => {
                 </Table.Cell>
                 <Table.Cell textAlign="center">
                   <Image
-                    src={`${import.meta.env.VITE_SERVER_URL}${product?.thumbnail?.url
-                      }`}
+                    src={`${product?.thumbnail?.formats?.thumbnail?.url}`}
                     alt={product.title}
                     width="50px"
                     height="50px"

@@ -3,11 +3,9 @@ import { toaster } from "../components/ui/toaster";
 import { useDispatch } from "react-redux";
 import { setIsOnline } from "../app/features/newtworkSlice";
 const InternetConnectionProvider = ({ children }: { children: React.ReactNode }) => {
-  const [online, setOnline] = useState(navigator.onLine);
   const dispatch = useDispatch()
   useEffect(() => {
     const handleOnline = () => {
-      setOnline(true);
       dispatch(setIsOnline(true));
       toaster.dismiss();
       toaster.create({
@@ -19,7 +17,6 @@ const InternetConnectionProvider = ({ children }: { children: React.ReactNode })
     };
 
     const handleOffline = () => {
-      setOnline(false);
       dispatch(setIsOnline(false));
       toaster.create({
         title: "You are offline",

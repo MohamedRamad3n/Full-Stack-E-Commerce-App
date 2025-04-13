@@ -15,7 +15,7 @@ const ProductCard = ({ attributes }: { attributes: ICartItem }) => {
       overflow="hidden"
     >
       <Image
-        src={`${import.meta.env.VITE_SERVER_URL}${attributes?.thumbnail?.url}`}
+        src={`${attributes?.thumbnail?.formats?.thumbnail?.url}`}
         alt="Green double couch with wooden legs"
         width={"200px"}
         height={"200px"}

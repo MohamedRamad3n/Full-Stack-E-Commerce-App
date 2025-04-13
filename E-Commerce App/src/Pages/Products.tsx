@@ -15,7 +15,11 @@ export interface IProduct {
   category?: ICategory | null;
   createdAt: string;
   thumbnail: {
-    url: string;
+    formats: {
+      thumbnail: {
+        url: string;
+      }
+    }
   };
 }
 interface ICategory {

@@ -25,9 +25,10 @@ import { toaster } from "../components/ui/toaster";
 import Modal from "../shared/Modal";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { IProduct } from "../Pages/Products";
+import DashBoardProductsTableSkeleton from "./TableSkelton";
 
 const DashBoardProductsTable = () => {
-  const { data: productsData } = useGetProductsQuery({ page: 1 });
+  const { data: productsData, isLoading } = useGetProductsQuery({ page: 1 });
   const [clickedProduct, setClickedProduct] = useState<string | null>(null);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
 
@@ -82,7 +83,7 @@ const DashBoardProductsTable = () => {
       [name]: value,
     });
   };
-
+  
   const onChangeCreateHandler = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -254,7 +255,7 @@ const DashBoardProductsTable = () => {
       });
     }
   }, [isSuccess, IsUpdatedSuccess, IsCreatedSuccess]);
-
+  if (isLoading) return <DashBoardProductsTableSkeleton />
   return (
     <>
       <Flex direction={"column"} mx={"auto"} my={6}>
@@ -300,9 +301,8 @@ const DashBoardProductsTable = () => {
                 </Table.Cell>
                 <Table.Cell textAlign="center">
                   <Image
-                    src={`${import.meta.env.VITE_SERVER_URL}${
-                      product?.thumbnail?.url
-                    }`}
+                    src={`${import.meta.env.VITE_SERVER_URL}${product?.thumbnail?.url
+                      }`}
                     alt={product.title}
                     width="50px"
                     height="50px"

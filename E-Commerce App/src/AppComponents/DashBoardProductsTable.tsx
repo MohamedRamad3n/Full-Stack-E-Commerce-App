@@ -26,6 +26,8 @@ import Modal from "../shared/Modal";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { IProduct } from "../Pages/Products";
 import DashBoardProductsTableSkeleton from "./TableSkelton";
+import { useSelector } from "react-redux";
+import { RootState } from "../app/store";
 
 const DashBoardProductsTable = () => {
   const { data: productsData, isLoading } = useGetProductsQuery({ page: 1 });
@@ -59,7 +61,7 @@ const DashBoardProductsTable = () => {
     createDashBoardProduct,
     { isLoading: isCreating, isSuccess: IsCreatedSuccess },
   ] = useCreateProductMutation();
-
+  const { isOnline } = useSelector((state: RootState) => state.network);
   // Modal states
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -83,7 +85,7 @@ const DashBoardProductsTable = () => {
       [name]: value,
     });
   };
-  
+
   const onChangeCreateHandler = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -255,7 +257,7 @@ const DashBoardProductsTable = () => {
       });
     }
   }, [isSuccess, IsUpdatedSuccess, IsCreatedSuccess]);
-  if (isLoading) return <DashBoardProductsTableSkeleton />
+  if (isLoading || !isOnline) return <DashBoardProductsTableSkeleton />
   return (
     <>
       <Flex direction={"column"} mx={"auto"} my={6}>

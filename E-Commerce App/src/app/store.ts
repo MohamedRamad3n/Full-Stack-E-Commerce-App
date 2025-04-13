@@ -5,7 +5,7 @@ import globalReducer from "./features/globalSlice";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { apiSlice } from "./features/apiSlice";
-
+import networkReducer from "./features/newtworkSlice"
 const persistCartConfig = {
   key: "cart",
   storage,
@@ -14,6 +14,7 @@ const persistedCart = persistReducer(persistCartConfig, cartReducer);
 export const store = configureStore({
   reducer: {
     userLogin: userLoginReducer,
+    network: networkReducer,
     cart: persistedCart,
     global: globalReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
